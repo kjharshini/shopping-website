@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopy - Minimal Shopping</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="container nav-container">
+        <a href="/home" class="logo">Shopy</a>
+        <nav class="nav-links">
+            <a href="/home">Home</a>
+            <a href="/cart">Cart</a>
+            {% if session.get('user') %}
+            <div class="profile-dropdown">
+                <div class="profile-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <div class="dropdown-menu">
+                    <div class="dropdown-user-info">
+                        <span class="dropdown-user-name">{{ session.get('user') }}</span>
+                        <span class="dropdown-user-role">Customer</span>
+                    </div>
+                    <a href="/logout" class="dropdown-item logout">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
+
+<main class="main-content container">
+
+    <section>
+        <h2>All Categories</h2>
+        <div class="category-flex">
+            <a href="/category/electronics" class="category-tag">Electronics</a>
+            <a href="/category/sports" class="category-tag">Sports</a>
+            <a href="/category/stationary" class="category-tag">Stationary</a>
+            <a href="/category/fashion" class="category-tag">Fashion</a>
+            <a href="/category/home-decor" class="category-tag">Home-Decor</a>
+            <a href="/category/kitchen" class="category-tag">Kitchen</a>
+            <a href="/category/beauty&care" class="category-tag">Beauty & Care</a>
+        </div>
+    </section>
+
+    <section>
+        <h2>All Products</h2>
+        <div class="grid">
+            {% for item in items %}
+            <div class="card">
+                <div class="card-img-container">
+                    <img src="/static/images/{{item.image}}" alt="{{item.name}}">
+                </div>
+                <div class="card-content">
+                    <h3>{{item.name}}</h3>
+                    <p class="price">₹{{item.price}}</p>
+                    <a href="/add_to_cart/{{item.id}}" class="btn btn-outline">Add to Cart</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+</main>
+
+<script>
+document.querySelectorAll('.btn-outline').forEach(button => {
+    button.addEventListener('click', function(e) {
+        if (this.getAttribute('href').includes('add_to_cart')) {
+            e.preventDefault();
+            fetch(this.getAttribute('href'))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                    }
+                });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

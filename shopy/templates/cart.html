@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - Shopy</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="container nav-container">
+            <a href="/home" class="logo">Shopy</a>
+            <nav class="nav-links">
+                <a href="/home">Home</a>
+                <a href="/cart">Cart</a>
+                {% if session.get('user') %}
+                <div class="profile-dropdown">
+                    <div class="profile-trigger">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-user-info">
+                            <span class="dropdown-user-name">{{ session.get('user') }}</span>
+                            <span class="dropdown-user-role">Customer</span>
+                        </div>
+                        <a href="/logout" class="dropdown-item logout">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        <h2>Your Cart</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{item.name}}</td>
+                        <td>₹{{item.price}}</td>
+                        <td>
+                            <a href="/remove_from_cart/{{item.id}}"
+                                style="text-decoration: none; color: #ff4444; font-weight: bold; margin-right: 8px;">−</a>
+                            {{item.quantity}}
+                            <a href="/increment_cart/{{item.id}}"
+                                style="text-decoration: none; color: #44bb44; font-weight: bold; margin-left: 8px;">+</a>
+                        </td>
+                        <td>₹{{item.total}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if items %}
+        <div class="cart-summary"
+            style="margin-top: 40px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 30px;">
+            <h3 style="font-size: 2rem; margin-bottom: 25px;">Grand Total: ₹{{ grand_total }}</h3>
+            <a href="/checkout" class="btn" style="padding: 16px 60px; font-size: 1.2rem; display: inline-block; max-width: 300px; text-decoration: none;">Proceed</a>
+        </div>
+        {% else %}
+        <p style="text-align: center; margin-top: 50px; font-size: 1.2rem; color: #666;">Your cart is empty.</p>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/home" class="btn btn-outline">Start Shopping</a>
+        </div>
+        {% endif %}
+    </main>
+
+</body>
+
+</html>
